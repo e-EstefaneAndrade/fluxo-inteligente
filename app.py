@@ -13,6 +13,26 @@ st.set_page_config(
 )
 
 # =====================================
+# SIDEBAR
+# =====================================
+
+with st.sidebar:
+
+    st.title("☕ Fluxo Inteligente")
+
+    st.markdown(
+        """
+        Sistema de Inteligência Financeira
+        para Pequenas Cafeterias
+
+        ---
+        Projeto de Especialização
+
+        Ciência de Dados
+        """
+    )
+
+# =====================================
 # CARREGAMENTO DOS DADOS
 # =====================================
 
@@ -150,6 +170,26 @@ ax.barh(
 st.pyplot(fig)
 
 # =====================================
+# INSIGHTS DO MODELO
+# =====================================
+
+st.subheader("🔍 Insights do Modelo")
+
+st.markdown(
+    """
+    Principais fatores que impactam o saldo de caixa:
+
+    • Receita média dos últimos 30 dias
+
+    • Fluxo médio dos últimos 30 dias
+
+    • Receita média dos últimos 7 dias
+
+    O modelo identificou que tendências de médio prazo possuem maior influência no saldo futuro da cafeteria.
+    """
+)
+
+# =====================================
 # ALERTA FINANCEIRO
 # =====================================
 
@@ -163,3 +203,19 @@ elif crescimento >= -5:
 
 else:
     st.error("Atenção: tendência de queda")
+
+# =====================================
+# RESUMO EXECUTIVO
+# =====================================
+
+st.subheader("📋 Resumo Executivo")
+
+st.info(
+    """
+    O Fluxo Inteligente prevê estabilidade financeira para os próximos 30 dias.
+
+    A projeção indica uma variação de -1,17% no saldo de caixa.
+
+    Recomenda-se monitorar a evolução das vendas semanais e manter o controle dos custos operacionais.
+    """
+)
