@@ -182,11 +182,11 @@ st.markdown(
     """
     Principais fatores que impactam o saldo de caixa:
 
-    • Receita média dos últimos 30 dias
+    - Receita média dos últimos 30 dias
 
-    • Fluxo médio dos últimos 30 dias
+    - Fluxo médio dos últimos 30 dias
 
-    • Receita média dos últimos 7 dias
+    - Receita média dos últimos 7 dias
 
     O modelo identificou que tendências de médio prazo possuem maior influência no saldo futuro da cafeteria.
     """
