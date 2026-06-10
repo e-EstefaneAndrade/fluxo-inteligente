@@ -3,6 +3,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # =====================================
+# FORMATAÇÃO BRASILEIRA
+# =====================================
+
+def moeda_br(valor):
+
+    return (
+        f"R$ {valor:,.2f}"
+        .replace(",", "X")
+        .replace(".", ",")
+        .replace("X", ".")
+    )
+
+# =====================================
 # CONFIGURAÇÃO DA PÁGINA
 # =====================================
 
@@ -63,6 +76,14 @@ st.subheader(
     "Sistema de Inteligência Financeira para Pequenas Cafeterias"
 )
 
+st.info(
+    """
+    O Fluxo Inteligente é uma plataforma de apoio à decisão para pequenas cafeterias.
+
+    Utilizando técnicas de Ciência de Dados e Machine Learning, o sistema projeta o saldo de caixa futuro e gera insights financeiros para auxiliar a gestão do negócio.
+    """
+)
+
 # =====================================
 # INDICADORES
 # =====================================
@@ -81,22 +102,22 @@ crescimento = (
 col1, col2, col3, col4 = st.columns(4)
 
 col1.metric(
-    "Receita Total",
-    f"R$ {receita_total:,.2f}"
+    "📈 Receita Total",
+    moeda_br(receita_total)
 )
 
 col2.metric(
-    "Saldo Atual",
-    f"R$ {saldo_atual:,.2f}"
+    "💰 Saldo Atual",
+    moeda_br(saldo_atual)
 )
 
 col3.metric(
-    "Saldo Previsto",
-    f"R$ {saldo_previsto:,.2f}"
+    "🔮 Saldo Previsto",
+    moeda_br(saldo_previsto)
 )
 
 col4.metric(
-    "Variação",
+    "📊 Variação",
     f"{crescimento:.2f}%"
 )
 
