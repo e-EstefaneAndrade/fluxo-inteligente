@@ -83,6 +83,14 @@ st.divider()
 
 st.subheader("📈 Receita Mensal")
 
+df_financeiro["data_transacao"] = pd.to_datetime(
+    df_financeiro["data_transacao"]
+)
+
+df_financeiro["mes"] = (
+    df_financeiro["data_transacao"]
+    .dt.strftime("%Y-%m")
+)
 receita_mensal = (
     df_financeiro
     .groupby("mes")["receita_dia"]
