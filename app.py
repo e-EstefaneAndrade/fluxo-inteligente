@@ -1,1 +1,157 @@
-Fluxo inteligente
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# =====================================
+# CONFIGURAÇÃO DA PÁGINA
+# =====================================
+
+st.set_page_config(
+    page_title="Fluxo Inteligente",
+    page_icon="☕",
+    layout="wide"
+)
+
+# =====================================
+# CARREGAMENTO DOS DADOS
+# =====================================
+
+df_financeiro = pd.read_csv(
+    "dados/dataset_financeiro_fluxo_inteligente.csv"
+)
+
+df_previsao = pd.read_csv(
+    "dados/previsao_30_dias_fluxo_inteligente.csv"
+)
+
+df_importancia = pd.read_csv(
+    "dados/importancia_variaveis.csv"
+)
+
+# =====================================
+# TÍTULO
+# =====================================
+
+st.title("☕ Fluxo Inteligente")
+
+st.subheader(
+    "Sistema de Inteligência Financeira para Pequenas Cafeterias"
+)
+
+# =====================================
+# INDICADORES
+# =====================================
+
+receita_total = df_financeiro["receita_dia"].sum()
+
+saldo_atual = df_financeiro["saldo_caixa"].iloc[-1]
+
+saldo_previsto = df_previsao["saldo_previsto"].iloc[-1]
+
+crescimento = (
+    (saldo_previsto - saldo_atual)
+    / saldo_atual
+) * 100
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric(
+    "Receita Total",
+    f"R$ {receita_total:,.2f}"
+)
+
+col2.metric(
+    "Saldo Atual",
+    f"R$ {saldo_atual:,.2f}"
+)
+
+col3.metric(
+    "Saldo Previsto",
+    f"R$ {saldo_previsto:,.2f}"
+)
+
+col4.metric(
+    "Variação",
+    f"{crescimento:.2f}%"
+)
+
+st.divider()
+
+# =====================================
+# RECEITA MENSAL
+# =====================================
+
+st.subheader("📈 Receita Mensal")
+
+receita_mensal = (
+    df_financeiro
+    .groupby("mes")["receita_dia"]
+    .sum()
+)
+
+fig, ax = plt.subplots(figsize=(10,4))
+
+receita_mensal.plot(
+    kind="bar",
+    ax=ax
+)
+
+st.pyplot(fig)
+
+# =====================================
+# SALDO HISTÓRICO
+# =====================================
+
+st.subheader("💰 Evolução do Saldo de Caixa")
+
+fig, ax = plt.subplots(figsize=(10,4))
+
+ax.plot(
+    df_financeiro["saldo_caixa"]
+)
+
+st.pyplot(fig)
+
+# =====================================
+# PREVISÃO FUTURA
+# =====================================
+
+st.subheader("🔮 Previsão para os Próximos 30 Dias")
+
+fig, ax = plt.subplots(figsize=(10,4))
+
+ax.plot(
+    df_previsao["saldo_previsto"]
+)
+
+st.pyplot(fig)
+
+# =====================================
+# IMPORTÂNCIA DAS VARIÁVEIS
+# =====================================
+
+st.subheader("📊 Variáveis Mais Importantes")
+
+fig, ax = plt.subplots(figsize=(10,4))
+
+ax.barh(
+    df_importancia["variavel"],
+    df_importancia["importancia"]
+)
+
+st.pyplot(fig)
+
+# =====================================
+# ALERTA FINANCEIRO
+# =====================================
+
+st.subheader("🚨 Situação Financeira")
+
+if crescimento >= 10:
+    st.success("Caixa saudável")
+
+elif crescimento >= -5:
+    st.warning("Caixa estável")
+
+else:
+    st.error("Atenção: tendência de queda")
