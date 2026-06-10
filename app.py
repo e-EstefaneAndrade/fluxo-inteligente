@@ -22,14 +22,16 @@ with st.sidebar:
 
     st.markdown(
         """
-        Sistema de Inteligência Financeira
-        para Pequenas Cafeterias
+        **Sistema de Inteligência Financeira
+        para Pequenas Cafeterias**
 
         ---
+
         Projeto de Especialização
 
         Ciência de Dados
-        """
+
+        ---
 
         Desenvolvido por Estefane Andrade
         """
