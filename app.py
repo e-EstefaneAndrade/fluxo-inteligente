@@ -30,6 +30,9 @@ with st.sidebar:
 
         Ciência de Dados
         """
+
+        Desenvolvido por Estefane Andrade
+        """
     )
 
 # =====================================
@@ -210,12 +213,24 @@ else:
 
 st.subheader("📋 Resumo Executivo")
 
-st.info(
-    """
-    O Fluxo Inteligente prevê estabilidade financeira para os próximos 30 dias.
+if crescimento >= 10:
+    mensagem = (
+        f"O Fluxo Inteligente prevê crescimento do saldo de caixa "
+        f"de {crescimento:.2f}% nos próximos 30 dias."
+    )
 
-    A projeção indica uma variação de -1,17% no saldo de caixa.
+elif crescimento >= -5:
+    mensagem = (
+        f"O Fluxo Inteligente prevê estabilidade financeira "
+        f"para os próximos 30 dias, com variação de "
+        f"{crescimento:.2f}%."
+    )
 
-    Recomenda-se monitorar a evolução das vendas semanais e manter o controle dos custos operacionais.
-    """
-)
+else:
+    mensagem = (
+        f"O Fluxo Inteligente identificou uma tendência "
+        f"de redução do saldo de caixa de "
+        f"{abs(crescimento):.2f}%."
+    )
+
+st.info(mensagem)
