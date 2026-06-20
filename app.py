@@ -51,6 +51,34 @@ with st.sidebar:
     )
 
 # =====================================
+# SOBRE O PROJETO
+# =====================================
+
+st.markdown(
+    """
+    ---
+    ### ☕ Sobre o Fluxo Inteligente
+
+    O Fluxo Inteligente é um protótipo SaaS de Inteligência Financeira
+    desenvolvido para pequenas cafeterias.
+
+    Utilizando técnicas de Ciência de Dados e Machine Learning,
+    o sistema projeta o saldo de caixa futuro e gera recomendações
+    para apoiar a tomada de decisão financeira.
+
+    **Principais funcionalidades:**
+    
+    ✅ Monitoramento financeiro
+    
+    ✅ Projeção de saldo de caixa
+    
+    ✅ Identificação dos fatores que impactam o caixa
+    
+    ✅ Recomendações gerenciais automatizadas
+    """
+)
+
+# =====================================
 # CARREGAMENTO DOS DADOS
 # =====================================
 
@@ -323,3 +351,25 @@ else:
         • Revise custos fixos e despesas operacionais.
         """
     )
+
+
+# =====================================
+# RODAPÉ
+# =====================================
+
+st.divider()
+
+st.caption(
+    """
+    Fluxo Inteligente © 2026
+
+    Projeto de Especialização em Ciência de Dados
+
+    Protótipo SaaS para Gestão Financeira de Pequenas Cafeterias
+    """
+)
+
+        • Revise custos fixos e despesas operacionais.
+        """
+    )
+
