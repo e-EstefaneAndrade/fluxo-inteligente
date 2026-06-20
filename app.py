@@ -279,3 +279,47 @@ else:
     )
 
 st.info(mensagem)
+
+# =====================================
+# RECOMENDAÇÕES GERENCIAIS
+# =====================================
+
+st.subheader("🎯 Recomendações Gerenciais")
+
+if crescimento >= 10:
+
+    st.success(
+        """
+        • O fluxo de caixa apresenta tendência positiva.
+
+        • Considere reinvestir parte do excedente em marketing ou expansão.
+
+        • Não há necessidade imediata de capital de giro adicional.
+        """
+    )
+
+elif crescimento >= -5:
+
+    st.info(
+        """
+        • O fluxo de caixa apresenta estabilidade.
+
+        • Recomenda-se acompanhar as vendas semanalmente.
+
+        • Mantenha o controle dos custos operacionais.
+        """
+    )
+
+else:
+
+    st.error(
+        """
+        • O modelo identificou tendência de queda no caixa.
+
+        • Avalie ações para aumentar receitas.
+
+        • Considere reforçar o capital de giro.
+
+        • Revise custos fixos e despesas operacionais.
+        """
+    )
