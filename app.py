@@ -127,7 +127,7 @@ st.divider()
 # RECEITA MENSAL
 # =====================================
 
-st.subheader("📈 Receita Mensal")
+st.subheader("📈 Evolução da Receita Mensal")
 
 df_financeiro["data_transacao"] = pd.to_datetime(
     df_financeiro["data_transacao"]
@@ -137,6 +137,7 @@ df_financeiro["mes"] = (
     df_financeiro["data_transacao"]
     .dt.strftime("%Y-%m")
 )
+
 receita_mensal = (
     df_financeiro
     .groupby("mes")["receita_dia"]
@@ -150,19 +151,30 @@ receita_mensal.plot(
     ax=ax
 )
 
+ax.set_title("Receita Total por Mês")
+ax.set_xlabel("Mês")
+ax.set_ylabel("Receita (R$)")
+ax.grid(axis="y", linestyle="--", alpha=0.5)
+
 st.pyplot(fig)
 
 # =====================================
 # SALDO HISTÓRICO
 # =====================================
 
-st.subheader("💰 Evolução do Saldo de Caixa")
+st.subheader("💰 Histórico do Saldo de Caixa")
 
 fig, ax = plt.subplots(figsize=(10,4))
 
 ax.plot(
-    df_financeiro["saldo_caixa"]
+    df_financeiro["saldo_caixa"],
+    linewidth=2
 )
+
+ax.set_title("Evolução do Saldo de Caixa")
+ax.set_xlabel("Dias")
+ax.set_ylabel("Saldo (R$)")
+ax.grid(True, linestyle="--", alpha=0.5)
 
 st.pyplot(fig)
 
@@ -170,13 +182,19 @@ st.pyplot(fig)
 # PREVISÃO FUTURA
 # =====================================
 
-st.subheader("🔮 Previsão para os Próximos 30 Dias")
+st.subheader("🔮 Projeção de Caixa para os Próximos 30 Dias")
 
 fig, ax = plt.subplots(figsize=(10,4))
 
 ax.plot(
-    df_previsao["saldo_previsto"]
+    df_previsao["saldo_previsto"],
+    linewidth=2
 )
+
+ax.set_title("Saldo Projetado")
+ax.set_xlabel("Dias Futuros")
+ax.set_ylabel("Saldo (R$)")
+ax.grid(True, linestyle="--", alpha=0.5)
 
 st.pyplot(fig)
 
@@ -184,7 +202,7 @@ st.pyplot(fig)
 # IMPORTÂNCIA DAS VARIÁVEIS
 # =====================================
 
-st.subheader("📊 Variáveis Mais Importantes")
+st.subheader("🧠 Fatores que Mais Influenciam o Caixa")
 
 fig, ax = plt.subplots(figsize=(10,4))
 
@@ -192,6 +210,10 @@ ax.barh(
     df_importancia["variavel"],
     df_importancia["importancia"]
 )
+
+ax.set_title("Importância das Variáveis do Modelo")
+ax.set_xlabel("Importância")
+ax.grid(axis="x", linestyle="--", alpha=0.5)
 
 st.pyplot(fig)
 
