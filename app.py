@@ -117,6 +117,12 @@ st.info(
 # INDICADORES
 # =====================================
 
+st.subheader("📌 Indicadores Financeiros")
+
+st.caption(
+    "Resumo dos principais indicadores financeiros gerados pelo Fluxo Inteligente."
+)
+
 receita_total = df_financeiro["receita_dia"].sum()
 
 saldo_atual = df_financeiro["saldo_caixa"].iloc[-1]
@@ -131,22 +137,22 @@ crescimento = (
 col1, col2, col3, col4 = st.columns(4)
 
 col1.metric(
-    "📈 Receita Total",
-    moeda_br(receita_total)
+    "💵 Receita Total",
+    f"R$ {receita_total:,.2f}"
 )
 
 col2.metric(
     "💰 Saldo Atual",
-    moeda_br(saldo_atual)
+    f"R$ {saldo_atual:,.2f}"
 )
 
 col3.metric(
     "🔮 Saldo Previsto",
-    moeda_br(saldo_previsto)
+    f"R$ {saldo_previsto:,.2f}"
 )
 
 col4.metric(
-    "📊 Variação",
+    "📈 Variação",
     f"{crescimento:.2f}%"
 )
 
@@ -418,11 +424,11 @@ st.divider()
 
 st.caption(
     """
-    Fluxo Inteligente © 2026
+    ☕ **Fluxo Inteligente** • Sistema de Inteligência Financeira para Pequenas Cafeterias
 
-    Projeto de Especialização em Ciência de Dados
+    Desenvolvido por **Estefane Andrade**
 
-    Protótipo SaaS para Gestão Financeira de Pequenas Cafeterias
+    Especialização em Ciência de Dados — UTFPR • 2026
     """
 )
 
