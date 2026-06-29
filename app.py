@@ -160,252 +160,255 @@ tab1, tab2, tab3 = st.tabs(
     ]
 )
 
-# =====================================
-# RECEITA MENSAL + SALDO HISTÓRICO
-# =====================================
+with tab1:
+    # =====================================
+    # RECEITA MENSAL + SALDO HISTÓRICO
+    # =====================================
+    
+    col_graf1, col_graf2 = st.columns(2)
+    
+    # ---------- RECEITA MENSAL ----------
+    
+    with col_graf1:
+    
+        st.subheader("📈 Evolução da Receita Mensal")
+    
+        df_financeiro["data_transacao"] = pd.to_datetime(
+            df_financeiro["data_transacao"]
+        )
+    
+        df_financeiro["mes"] = (
+            df_financeiro["data_transacao"]
+            .dt.strftime("%Y-%m")
+        )
+    
+        receita_mensal = (
+            df_financeiro
+            .groupby("mes", as_index=False)["receita_dia"]
+            .sum()
+        )
+    
+        fig = px.bar(
+            receita_mensal,
+            x="mes",
+            y="receita_dia",
+            text_auto=".2s",
+            title="Receita Total por Mês"
+        )
+    
+        fig.update_layout(
+            xaxis_title="Mês",
+            yaxis_title="Receita (R$)",
+            template="plotly_white",
+            height=420,
+            margin=dict(l=20, r=20, t=50, b=20)
+        )
+    
+        st.plotly_chart(fig, use_container_width=True)
+    
+    
+    # ---------- SALDO HISTÓRICO ----------
+    
+    with col_graf2:
+    
+        st.subheader("💰 Evolução do Saldo de Caixa")
+    
+        saldo = df_financeiro.reset_index()
+    
+        fig = px.line(
+            saldo,
+            x=saldo.index,
+            y="saldo_caixa",
+            title="Saldo de Caixa"
+        )
+    
+        fig.update_traces(
+            line=dict(width=3)
+        )
+    
+        fig.update_layout(
+            xaxis_title="Dias",
+            yaxis_title="Saldo (R$)",
+            template="plotly_white",
+            height=420,
+            margin=dict(l=20, r=20, t=50, b=20)
+        )
+    
+        st.plotly_chart(fig, use_container_width=True)
 
-col_graf1, col_graf2 = st.columns(2)
+with tab2:
+    # =====================================
+    # PREVISÃO + IMPORTÂNCIA DAS VARIÁVEIS
+    # =====================================
+    
+    col_graf3, col_graf4 = st.columns(2)
+    
+    # ---------- PREVISÃO ----------
+    
+    with col_graf3:
+    
+        st.subheader("🔮 Previsão para os Próximos 30 Dias")
+    
+        previsao = df_previsao.reset_index()
+    
+        fig = px.line(
+            previsao,
+            x=previsao.index,
+            y="saldo_previsto",
+            title="Saldo Previsto"
+        )
+    
+        fig.update_traces(
+            line=dict(width=3)
+        )
+    
+        fig.update_layout(
+            xaxis_title="Dias",
+            yaxis_title="Saldo (R$)",
+            template="plotly_white",
+            height=420,
+            margin=dict(l=20, r=20, t=50, b=20)
+        )
+    
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # ---------- IMPORTÂNCIA DAS VARIÁVEIS ----------
+    
+    with col_graf4:
+    
+        st.subheader("📊 Variáveis Mais Importantes")
+    
+        importancia = df_importancia.sort_values(
+            by="importancia",
+            ascending=True
+        )
+    
+        fig = px.bar(
+            importancia,
+            x="importancia",
+            y="variavel",
+            orientation="h",
+            title="Importância das Variáveis",
+            text_auto=".2f"
+        )
+    
+        fig.update_layout(
+            xaxis_title="Importância",
+            yaxis_title="",
+            template="plotly_white",
+            height=420,
+            margin=dict(l=20, r=20, t=50, b=20)
+        )
+    
+        st.plotly_chart(fig, use_container_width=True)
 
-# ---------- RECEITA MENSAL ----------
-
-with col_graf1:
-
-    st.subheader("📈 Evolução da Receita Mensal")
-
-    df_financeiro["data_transacao"] = pd.to_datetime(
-        df_financeiro["data_transacao"]
-    )
-
-    df_financeiro["mes"] = (
-        df_financeiro["data_transacao"]
-        .dt.strftime("%Y-%m")
-    )
-
-    receita_mensal = (
-        df_financeiro
-        .groupby("mes", as_index=False)["receita_dia"]
-        .sum()
-    )
-
-    fig = px.bar(
-        receita_mensal,
-        x="mes",
-        y="receita_dia",
-        text_auto=".2s",
-        title="Receita Total por Mês"
-    )
-
-    fig.update_layout(
-        xaxis_title="Mês",
-        yaxis_title="Receita (R$)",
-        template="plotly_white",
-        height=420,
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-
-# ---------- SALDO HISTÓRICO ----------
-
-with col_graf2:
-
-    st.subheader("💰 Evolução do Saldo de Caixa")
-
-    saldo = df_financeiro.reset_index()
-
-    fig = px.line(
-        saldo,
-        x=saldo.index,
-        y="saldo_caixa",
-        title="Saldo de Caixa"
-    )
-
-    fig.update_traces(
-        line=dict(width=3)
-    )
-
-    fig.update_layout(
-        xaxis_title="Dias",
-        yaxis_title="Saldo (R$)",
-        template="plotly_white",
-        height=420,
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-# =====================================
-# PREVISÃO + IMPORTÂNCIA DAS VARIÁVEIS
-# =====================================
-
-col_graf3, col_graf4 = st.columns(2)
-
-# ---------- PREVISÃO ----------
-
-with col_graf3:
-
-    st.subheader("🔮 Previsão para os Próximos 30 Dias")
-
-    previsao = df_previsao.reset_index()
-
-    fig = px.line(
-        previsao,
-        x=previsao.index,
-        y="saldo_previsto",
-        title="Saldo Previsto"
-    )
-
-    fig.update_traces(
-        line=dict(width=3)
-    )
-
-    fig.update_layout(
-        xaxis_title="Dias",
-        yaxis_title="Saldo (R$)",
-        template="plotly_white",
-        height=420,
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-# ---------- IMPORTÂNCIA DAS VARIÁVEIS ----------
-
-with col_graf4:
-
-    st.subheader("📊 Variáveis Mais Importantes")
-
-    importancia = df_importancia.sort_values(
-        by="importancia",
-        ascending=True
-    )
-
-    fig = px.bar(
-        importancia,
-        x="importancia",
-        y="variavel",
-        orientation="h",
-        title="Importância das Variáveis",
-        text_auto=".2f"
-    )
-
-    fig.update_layout(
-        xaxis_title="Importância",
-        yaxis_title="",
-        template="plotly_white",
-        height=420,
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-# =====================================
-# INSIGHTS DO MODELO
-# =====================================
-
-st.subheader("🔍 Insights do Modelo")
-
-st.markdown(
-    """
-    Principais fatores que impactam o saldo de caixa:
-
-    - Receita média dos últimos 30 dias
-
-    - Fluxo médio dos últimos 30 dias
-
-    - Receita média dos últimos 7 dias
-
-    O modelo identificou que tendências de médio prazo possuem maior influência no saldo futuro da cafeteria.
-    """
-)
-
-# =====================================
-# ALERTA FINANCEIRO
-# =====================================
-
-st.subheader("🚨 Situação Financeira")
-
-if crescimento >= 10:
-    st.success("Caixa saudável")
-
-elif crescimento >= -5:
-    st.warning("Caixa estável")
-
-else:
-    st.error("Atenção: tendência de queda")
-
-# =====================================
-# RESUMO EXECUTIVO
-# =====================================
-
-st.subheader("📋 Resumo Executivo")
-
-if crescimento >= 10:
-    mensagem = (
-        f"O Fluxo Inteligente prevê crescimento do saldo de caixa "
-        f"de {crescimento:.2f}% nos próximos 30 dias."
-    )
-
-elif crescimento >= -5:
-    mensagem = (
-        f"O Fluxo Inteligente prevê estabilidade financeira "
-        f"para os próximos 30 dias, com variação de "
-        f"{crescimento:.2f}%."
-    )
-
-else:
-    mensagem = (
-        f"O Fluxo Inteligente identificou uma tendência "
-        f"de redução do saldo de caixa de "
-        f"{abs(crescimento):.2f}%."
-    )
-
-st.info(mensagem)
-
-# =====================================
-# RECOMENDAÇÕES GERENCIAIS
-# =====================================
-
-st.subheader("🎯 Recomendações Gerenciais")
-
-if crescimento >= 10:
-
-    st.success(
+with tab3:
+    # =====================================
+    # INSIGHTS DO MODELO
+    # =====================================
+    
+    st.subheader("🔍 Insights do Modelo")
+    
+    st.markdown(
         """
-        • O fluxo de caixa apresenta tendência positiva.
-
-        • Considere reinvestir parte do excedente em marketing ou expansão.
-
-        • Não há necessidade imediata de capital de giro adicional.
+        Principais fatores que impactam o saldo de caixa:
+    
+        - Receita média dos últimos 30 dias
+    
+        - Fluxo médio dos últimos 30 dias
+    
+        - Receita média dos últimos 7 dias
+    
+        O modelo identificou que tendências de médio prazo possuem maior influência no saldo futuro da cafeteria.
         """
     )
-
-elif crescimento >= -5:
-
-    st.info(
-        """
-        • O fluxo de caixa apresenta estabilidade.
-
-        • Recomenda-se acompanhar as vendas semanalmente.
-
-        • Mantenha o controle dos custos operacionais.
-        """
-    )
-
-else:
-
-    st.error(
-        """
-        • O modelo identificou tendência de queda no caixa.
-
-        • Avalie ações para aumentar receitas.
-
-        • Considere reforçar o capital de giro.
-
-        • Revise custos fixos e despesas operacionais.
-        """
-    )
+    
+    # =====================================
+    # ALERTA FINANCEIRO
+    # =====================================
+    
+    st.subheader("🚨 Situação Financeira")
+    
+    if crescimento >= 10:
+        st.success("Caixa saudável")
+    
+    elif crescimento >= -5:
+        st.warning("Caixa estável")
+    
+    else:
+        st.error("Atenção: tendência de queda")
+    
+    # =====================================
+    # RESUMO EXECUTIVO
+    # =====================================
+    
+    st.subheader("📋 Resumo Executivo")
+    
+    if crescimento >= 10:
+        mensagem = (
+            f"O Fluxo Inteligente prevê crescimento do saldo de caixa "
+            f"de {crescimento:.2f}% nos próximos 30 dias."
+        )
+    
+    elif crescimento >= -5:
+        mensagem = (
+            f"O Fluxo Inteligente prevê estabilidade financeira "
+            f"para os próximos 30 dias, com variação de "
+            f"{crescimento:.2f}%."
+        )
+    
+    else:
+        mensagem = (
+            f"O Fluxo Inteligente identificou uma tendência "
+            f"de redução do saldo de caixa de "
+            f"{abs(crescimento):.2f}%."
+        )
+    
+    st.info(mensagem)
+    
+    # =====================================
+    # RECOMENDAÇÕES GERENCIAIS
+    # =====================================
+    
+    st.subheader("🎯 Recomendações Gerenciais")
+    
+    if crescimento >= 10:
+    
+        st.success(
+            """
+            • O fluxo de caixa apresenta tendência positiva.
+    
+            • Considere reinvestir parte do excedente em marketing ou expansão.
+    
+            • Não há necessidade imediata de capital de giro adicional.
+            """
+        )
+    
+    elif crescimento >= -5:
+    
+        st.info(
+            """
+            • O fluxo de caixa apresenta estabilidade.
+    
+            • Recomenda-se acompanhar as vendas semanalmente.
+    
+            • Mantenha o controle dos custos operacionais.
+            """
+        )
+    
+    else:
+    
+        st.error(
+            """
+            • O modelo identificou tendência de queda no caixa.
+    
+            • Avalie ações para aumentar receitas.
+    
+            • Considere reforçar o capital de giro.
+    
+            • Revise custos fixos e despesas operacionais.
+            """
+        )
 
 # =====================================
 # RODAPÉ
