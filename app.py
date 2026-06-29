@@ -226,43 +226,61 @@ with col_graf2:
     st.pyplot(fig, use_container_width=True)
 
 # =====================================
-# PREVISÃO FUTURA
+# PREVISÃO + IMPORTÂNCIA DAS VARIÁVEIS
 # =====================================
 
-st.subheader("🔮 Projeção de Caixa para os Próximos 30 Dias")
+col_graf3, col_graf4 = st.columns(2)
 
-fig, ax = plt.subplots(figsize=(10,4))
+# ---------- PREVISÃO ----------
 
-ax.plot(
-    df_previsao["saldo_previsto"],
-    linewidth=2
-)
+with col_graf3:
 
-ax.set_title("Saldo Projetado")
-ax.set_xlabel("Dias Futuros")
-ax.set_ylabel("Saldo (R$)")
-ax.grid(True, linestyle="--", alpha=0.5)
+    st.subheader("🔮 Previsão para os Próximos 30 Dias")
 
-st.pyplot(fig)
+    fig, ax = plt.subplots(figsize=(6,4))
 
-# =====================================
-# IMPORTÂNCIA DAS VARIÁVEIS
-# =====================================
+    ax.plot(
+        df_previsao["saldo_previsto"],
+        linewidth=2
+    )
 
-st.subheader("🧠 Fatores que Mais Influenciam o Caixa")
+    ax.set_title("Saldo Previsto", fontsize=12)
+    ax.set_xlabel("Dias")
+    ax.set_ylabel("Saldo (R$)")
 
-fig, ax = plt.subplots(figsize=(10,4))
+    ax.grid(
+        linestyle="--",
+        alpha=0.5
+    )
 
-ax.barh(
-    df_importancia["variavel"],
-    df_importancia["importancia"]
-)
+    st.pyplot(fig, use_container_width=True)
 
-ax.set_title("Importância das Variáveis do Modelo")
-ax.set_xlabel("Importância")
-ax.grid(axis="x", linestyle="--", alpha=0.5)
 
-st.pyplot(fig)
+# ---------- IMPORTÂNCIA DAS VARIÁVEIS ----------
+
+with col_graf4:
+
+    st.subheader("📊 Variáveis Mais Importantes")
+
+    fig, ax = plt.subplots(figsize=(6,4))
+
+    ax.barh(
+        df_importancia["variavel"],
+        df_importancia["importancia"],
+        color="#4F81BD"
+    )
+
+    ax.set_title("Importância das Variáveis", fontsize=12)
+    ax.set_xlabel("Importância")
+    ax.set_ylabel("Variáveis")
+
+    ax.grid(
+        axis="x",
+        linestyle="--",
+        alpha=0.5
+    )
+
+    st.pyplot(fig, use_container_width=True)
 
 # =====================================
 # INSIGHTS DO MODELO
