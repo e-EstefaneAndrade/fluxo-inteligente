@@ -204,23 +204,28 @@ with col_graf2:
 
     st.subheader("💰 Evolução do Saldo de Caixa")
 
-    fig, ax = plt.subplots(figsize=(6,4))
+    saldo = df_financeiro.reset_index()
 
-    ax.plot(
-        df_financeiro["saldo_caixa"],
-        linewidth=2
+    fig = px.line(
+        saldo,
+        x=saldo.index,
+        y="saldo_caixa",
+        title="Saldo de Caixa"
     )
 
-    ax.set_title("Saldo de Caixa", fontsize=12)
-    ax.set_xlabel("Dias")
-    ax.set_ylabel("Saldo (R$)")
-
-    ax.grid(
-        linestyle="--",
-        alpha=0.5
+    fig.update_traces(
+        line=dict(width=3)
     )
 
-    st.pyplot(fig, use_container_width=True)
+    fig.update_layout(
+        xaxis_title="Dias",
+        yaxis_title="Saldo (R$)",
+        template="plotly_white",
+        height=420,
+        margin=dict(l=20, r=20, t=50, b=20)
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 # =====================================
 # PREVISÃO + IMPORTÂNCIA DAS VARIÁVEIS
@@ -234,24 +239,28 @@ with col_graf3:
 
     st.subheader("🔮 Previsão para os Próximos 30 Dias")
 
-    fig, ax = plt.subplots(figsize=(6,4))
+    previsao = df_previsao.reset_index()
 
-    ax.plot(
-        df_previsao["saldo_previsto"],
-        linewidth=2
+    fig = px.line(
+        previsao,
+        x=previsao.index,
+        y="saldo_previsto",
+        title="Saldo Previsto"
     )
 
-    ax.set_title("Saldo Previsto", fontsize=12)
-    ax.set_xlabel("Dias")
-    ax.set_ylabel("Saldo (R$)")
-
-    ax.grid(
-        linestyle="--",
-        alpha=0.5
+    fig.update_traces(
+        line=dict(width=3)
     )
 
-    st.pyplot(fig, use_container_width=True)
+    fig.update_layout(
+        xaxis_title="Dias",
+        yaxis_title="Saldo (R$)",
+        template="plotly_white",
+        height=420,
+        margin=dict(l=20, r=20, t=50, b=20)
+    )
 
+    st.plotly_chart(fig, use_container_width=True)
 
 # ---------- IMPORTÂNCIA DAS VARIÁVEIS ----------
 
@@ -259,25 +268,29 @@ with col_graf4:
 
     st.subheader("📊 Variáveis Mais Importantes")
 
-    fig, ax = plt.subplots(figsize=(6,4))
-
-    ax.barh(
-        df_importancia["variavel"],
-        df_importancia["importancia"],
-        color="#4F81BD"
+    importancia = df_importancia.sort_values(
+        by="importancia",
+        ascending=True
     )
 
-    ax.set_title("Importância das Variáveis", fontsize=12)
-    ax.set_xlabel("Importância")
-    ax.set_ylabel("Variáveis")
-
-    ax.grid(
-        axis="x",
-        linestyle="--",
-        alpha=0.5
+    fig = px.bar(
+        importancia,
+        x="importancia",
+        y="variavel",
+        orientation="h",
+        title="Importância das Variáveis",
+        text_auto=".2f"
     )
 
-    st.pyplot(fig, use_container_width=True)
+    fig.update_layout(
+        xaxis_title="Importância",
+        yaxis_title="",
+        template="plotly_white",
+        height=420,
+        margin=dict(l=20, r=20, t=50, b=20)
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 # =====================================
 # INSIGHTS DO MODELO
