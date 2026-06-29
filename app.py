@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 # =====================================
 # FORMATAÇÃO BRASILEIRA
@@ -174,31 +175,27 @@ with col_graf1:
 
     receita_mensal = (
         df_financeiro
-        .groupby("mes")["receita_dia"]
+        .groupby("mes", as_index=False)["receita_dia"]
         .sum()
     )
 
-    fig, ax = plt.subplots(figsize=(6,4))
-
-    receita_mensal.plot(
-        kind="bar",
-        ax=ax,
-        color="#4F81BD"
+    fig = px.bar(
+        receita_mensal,
+        x="mes",
+        y="receita_dia",
+        text_auto=".2s",
+        title="Receita Total por Mês"
     )
 
-    ax.set_title("Receita Total por Mês", fontsize=12)
-    ax.set_xlabel("Mês")
-    ax.set_ylabel("Receita (R$)")
-
-    ax.grid(
-        axis="y",
-        linestyle="--",
-        alpha=0.5
+    fig.update_layout(
+        xaxis_title="Mês",
+        yaxis_title="Receita (R$)",
+        template="plotly_white",
+        height=420,
+        margin=dict(l=20, r=20, t=50, b=20)
     )
 
-    plt.xticks(rotation=0)
-
-    st.pyplot(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 # ---------- SALDO HISTÓRICO ----------
