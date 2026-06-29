@@ -157,6 +157,8 @@ st.divider()
 
 col_graf1, col_graf2 = st.columns(2)
 
+# ---------- RECEITA MENSAL ----------
+
 with col_graf1:
 
     st.subheader("📈 Evolução da Receita Mensal")
@@ -178,16 +180,28 @@ with col_graf1:
 
     fig, ax = plt.subplots(figsize=(6,4))
 
-    ax.set_title("Receita Total por Mês")
+    receita_mensal.plot(
+        kind="bar",
+        ax=ax,
+        color="#4F81BD"
+    )
+
+    ax.set_title("Receita Total por Mês", fontsize=12)
     ax.set_xlabel("Mês")
     ax.set_ylabel("Receita (R$)")
 
-    receita_mensal.plot(
-        kind="bar",
-        ax=ax
+    ax.grid(
+        axis="y",
+        linestyle="--",
+        alpha=0.5
     )
 
-    st.pyplot(fig)
+    plt.xticks(rotation=0)
+
+    st.pyplot(fig, use_container_width=True)
+
+
+# ---------- SALDO HISTÓRICO ----------
 
 with col_graf2:
 
@@ -195,13 +209,21 @@ with col_graf2:
 
     fig, ax = plt.subplots(figsize=(6,4))
 
-    ax.plot(df_financeiro["saldo_caixa"])
+    ax.plot(
+        df_financeiro["saldo_caixa"],
+        linewidth=2
+    )
 
-    ax.set_title("Saldo de Caixa")
+    ax.set_title("Saldo de Caixa", fontsize=12)
     ax.set_xlabel("Dias")
     ax.set_ylabel("Saldo (R$)")
 
-    st.pyplot(fig)
+    ax.grid(
+        linestyle="--",
+        alpha=0.5
+    )
+
+    st.pyplot(fig, use_container_width=True)
 
 # =====================================
 # PREVISÃO FUTURA
