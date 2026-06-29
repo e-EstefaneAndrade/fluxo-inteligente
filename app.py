@@ -152,59 +152,56 @@ col4.metric(
 st.divider()
 
 # =====================================
-# RECEITA MENSAL
+# RECEITA MENSAL + SALDO HISTÓRICO
 # =====================================
 
-st.subheader("📈 Evolução da Receita Mensal")
+col_graf1, col_graf2 = st.columns(2)
 
-df_financeiro["data_transacao"] = pd.to_datetime(
-    df_financeiro["data_transacao"]
-)
+with col_graf1:
 
-df_financeiro["mes"] = (
-    df_financeiro["data_transacao"]
-    .dt.strftime("%Y-%m")
-)
+    st.subheader("📈 Evolução da Receita Mensal")
 
-receita_mensal = (
-    df_financeiro
-    .groupby("mes")["receita_dia"]
-    .sum()
-)
+    df_financeiro["data_transacao"] = pd.to_datetime(
+        df_financeiro["data_transacao"]
+    )
 
-fig, ax = plt.subplots(figsize=(10,4))
+    df_financeiro["mes"] = (
+        df_financeiro["data_transacao"]
+        .dt.strftime("%Y-%m")
+    )
 
-receita_mensal.plot(
-    kind="bar",
-    ax=ax
-)
+    receita_mensal = (
+        df_financeiro
+        .groupby("mes")["receita_dia"]
+        .sum()
+    )
 
-ax.set_title("Receita Total por Mês")
-ax.set_xlabel("Mês")
-ax.set_ylabel("Receita (R$)")
-ax.grid(axis="y", linestyle="--", alpha=0.5)
+    fig, ax = plt.subplots(figsize=(6,4))
 
-st.pyplot(fig)
+    ax.set_title("Receita Total por Mês")
+    ax.set_xlabel("Mês")
+    ax.set_ylabel("Receita (R$)")
 
-# =====================================
-# SALDO HISTÓRICO
-# =====================================
+    receita_mensal.plot(
+        kind="bar",
+        ax=ax
+    )
 
-st.subheader("💰 Histórico do Saldo de Caixa")
+    st.pyplot(fig)
 
-fig, ax = plt.subplots(figsize=(10,4))
+with col_graf2:
 
-ax.plot(
-    df_financeiro["saldo_caixa"],
-    linewidth=2
-)
+    st.subheader("💰 Evolução do Saldo de Caixa")
 
-ax.set_title("Evolução do Saldo de Caixa")
-ax.set_xlabel("Dias")
-ax.set_ylabel("Saldo (R$)")
-ax.grid(True, linestyle="--", alpha=0.5)
+    fig, ax = plt.subplots(figsize=(6,4))
 
-st.pyplot(fig)
+    ax.plot(df_financeiro["saldo_caixa"])
+
+    ax.set_title("Saldo de Caixa")
+    ax.set_xlabel("Dias")
+    ax.set_ylabel("Saldo (R$)")
+
+    st.pyplot(fig)
 
 # =====================================
 # PREVISÃO FUTURA
