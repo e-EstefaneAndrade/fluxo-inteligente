@@ -152,6 +152,14 @@ col4.metric(
 
 st.divider()
 
+tab1, tab2, tab3 = st.tabs(
+    [
+        "📊 Visão Geral",
+        "📈 Análises",
+        "🤖 Inteligência"
+    ]
+)
+
 # =====================================
 # RECEITA MENSAL + SALDO HISTÓRICO
 # =====================================
