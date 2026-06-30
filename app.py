@@ -7,8 +7,7 @@ import plotly.express as px
 # FORMATAÇÃO BRASILEIRA
 # =====================================
 
-def moeda_br(valor):
-
+def formatar_moeda(valor):
     return (
         f"R$ {valor:,.2f}"
         .replace(",", "X")
@@ -138,22 +137,22 @@ col1, col2, col3, col4 = st.columns(4)
 
 col1.metric(
     "💵 Receita Total",
-    f"R$ {receita_total:,.2f}"
+    formatar_moeda(receita_total)
 )
 
 col2.metric(
     "💰 Saldo Atual",
-    f"R$ {saldo_atual:,.2f}"
+    formatar_moeda(saldo_atual)
 )
 
 col3.metric(
     "🔮 Saldo Previsto",
-    f"R$ {saldo_previsto:,.2f}"
+    formatar_moeda(saldo_previsto)
 )
 
 col4.metric(
     "📈 Variação",
-    f"{crescimento:.2f}%"
+    f"{crescimento:.2f}".replace(".", ",") + "%"
 )
 
 st.divider()
