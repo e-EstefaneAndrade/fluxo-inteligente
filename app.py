@@ -259,31 +259,48 @@ with tab2:
     # ---------- PREVISÃO ----------
     
     with col_graf3:
-    
-        st.subheader("🔮 Previsão para os Próximos 30 Dias")
-    
-        previsao = df_previsao.reset_index()
-    
-        fig = px.line(
-            previsao,
-            x=previsao.index,
-            y="saldo_previsto",
-            title="Saldo Previsto"
-        )
-    
-        fig.update_traces(
-            line=dict(width=3)
-        )
-    
-        fig.update_layout(
-            xaxis_title="Dias",
-            yaxis_title="Saldo (R$)",
-            template="plotly_white",
-            height=420,
-            margin=dict(l=20, r=20, t=50, b=20)
-        )
-    
-        st.plotly_chart(fig, use_container_width=True)
+
+    st.subheader("🔮 Histórico e Previsão do Saldo de Caixa")
+
+    fig = px.line(
+        df_historico_previsao,
+        x="data",
+        y="saldo",
+        color="tipo",
+        line_dash="tipo",
+        title="Evolução Histórica e Projeção do Saldo de Caixa",
+        labels={
+            "data": "Data",
+            "saldo": "Saldo de Caixa (R$)",
+            "tipo": "Período"
+        }
+    )
+
+    # Marca o início da previsão
+    ultima_data_historico = (
+        df_historico_previsao[
+            df_historico_previsao["tipo"] == "Histórico"
+        ]["data"].max()
+    )
+
+    fig.add_vline(
+        x=ultima_data_historico,
+        line_dash="dot",
+        line_color="red",
+        annotation_text="Início da previsão",
+        annotation_position="top right"
+    )
+
+    fig.update_layout(
+        template="plotly_white",
+        height=450,
+        legend_title="Período"
+    )
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
     
     # ---------- IMPORTÂNCIA DAS VARIÁVEIS ----------
     
