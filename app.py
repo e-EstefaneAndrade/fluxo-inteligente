@@ -94,6 +94,10 @@ df_importancia = pd.read_csv(
     "dados/importancia_variaveis.csv"
 )
 
+df_historico_previsao = pd.read_csv(
+    "dados/historico_previsao_fluxo_inteligente.csv"
+)
+
 # =====================================
 # TÍTULO
 # =====================================
