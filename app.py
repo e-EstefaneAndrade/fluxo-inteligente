@@ -98,6 +98,10 @@ df_historico_previsao = pd.read_csv(
     "dados/historico_previsao_fluxo_inteligente.csv"
 )
 
+df_historico_previsao["data"] = pd.to_datetime(
+    df_historico_previsao["data"]
+)
+
 # =====================================
 # TÍTULO
 # =====================================
