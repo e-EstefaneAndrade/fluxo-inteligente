@@ -29,6 +29,10 @@ st.set_page_config(
 # SIDEBAR
 # =====================================
 
+# =====================================
+# SIDEBAR
+# =====================================
+
 with st.sidebar:
 
     st.title("☕ Fluxo Inteligente")
@@ -51,56 +55,52 @@ with st.sidebar:
     )
 
 # =====================================
-# SOBRE O PROJETO
-# =====================================
-
-st.markdown(
-    """
-    ---
-    ### ☕ Sobre o Fluxo Inteligente
-
-    O Fluxo Inteligente é um protótipo SaaS de Inteligência Financeira
-    desenvolvido para pequenas cafeterias.
-
-    Utilizando técnicas de Ciência de Dados e Machine Learning,
-    o sistema projeta o saldo de caixa futuro e gera recomendações
-    para apoiar a tomada de decisão financeira.
-
-    **Principais funcionalidades:**
-    
-    ✅ Monitoramento financeiro
-    
-    ✅ Projeção de saldo de caixa
-    
-    ✅ Identificação dos fatores que impactam o caixa
-    
-    ✅ Recomendações gerenciais automatizadas
-    """
-)
-
-# =====================================
 # CARREGAMENTO DOS DADOS
 # =====================================
+@st.cache_data
+def carregar_dados():
+    """Carrega e prepara todos os datasets utilizados pelo dashboard."""
+    df_financeiro = pd.read_csv(
+        "dados/dataset_financeiro_fluxo_inteligente.csv"
+    )
 
-df_financeiro = pd.read_csv(
-    "dados/dataset_financeiro_fluxo_inteligente.csv"
-)
+    df_previsao = pd.read_csv(
+        "dados/previsao_30_dias_fluxo_inteligente.csv"
+    )
 
-df_previsao = pd.read_csv(
-    "dados/previsao_30_dias_fluxo_inteligente.csv"
-)
+    df_importancia = pd.read_csv(
+        "dados/importancia_variaveis.csv"
+    )
 
-df_importancia = pd.read_csv(
-    "dados/importancia_variaveis.csv"
-)
+    df_historico_previsao = pd.read_csv(
+        "dados/historico_previsao_fluxo_inteligente.csv"
+    )
 
-df_historico_previsao = pd.read_csv(
-    "dados/historico_previsao_fluxo_inteligente.csv"
-)
+    df_historico_previsao["data"] = pd.to_datetime(
+        df_historico_previsao["data"]
+    )
 
-df_historico_previsao["data"] = pd.to_datetime(
-    df_historico_previsao["data"]
-)
+    df_financeiro["data_transacao"] = pd.to_datetime(
+        df_financeiro["data_transacao"]
+    )
+
+    return df_financeiro, df_previsao, df_importancia, df_historico_previsao
+
+
+try:
+    df_financeiro, df_previsao, df_importancia, df_historico_previsao = carregar_dados()
+except FileNotFoundError as e:
+    st.error(
+        f"""
+        Não foi possível carregar os dados do sistema.
+
+        Verifique se a pasta `dados/` está presente no repositório e contém todos
+        os arquivos CSV esperados.
+
+        Detalhe técnico: {e}
+        """
+    )
+    st.stop()
 
 # =====================================
 # TÍTULO
@@ -114,9 +114,10 @@ st.subheader(
 
 st.info(
     """
-    O Fluxo Inteligente é uma plataforma de apoio à decisão para pequenas cafeterias.
-
-    Utilizando técnicas de Ciência de Dados e Machine Learning, o sistema projeta o saldo de caixa futuro e gera insights financeiros para auxiliar a gestão do negócio.
+    O Fluxo Inteligente é um protótipo SaaS de Inteligência Financeira desenvolvido para
+    pequenas cafeterias. Utilizando técnicas de Ciência de Dados e Machine Learning, o
+    sistema projeta o saldo de caixa futuro, identifica os fatores que mais impactam o
+    caixa e gera recomendações gerenciais automatizadas para apoiar a tomada de decisão.
     """
 )
 
@@ -136,10 +137,13 @@ saldo_atual = df_financeiro["saldo_caixa"].iloc[-1]
 
 saldo_previsto = df_previsao["saldo_previsto"].iloc[-1]
 
-crescimento = (
-    (saldo_previsto - saldo_atual)
-    / saldo_atual
-) * 100
+if saldo_atual != 0:
+    crescimento = (
+        (saldo_previsto - saldo_atual)
+        / saldo_atual
+    ) * 100
+else:
+    crescimento = 0.0
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -185,11 +189,7 @@ with tab1:
     with col_graf1:
     
         st.subheader("📈 Evolução da Receita Mensal")
-    
-        df_financeiro["data_transacao"] = pd.to_datetime(
-            df_financeiro["data_transacao"]
-        )
-    
+
         df_financeiro["mes"] = (
             df_financeiro["data_transacao"]
             .dt.strftime("%Y-%m")
