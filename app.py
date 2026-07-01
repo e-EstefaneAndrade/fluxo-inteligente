@@ -29,10 +29,6 @@ st.set_page_config(
 # SIDEBAR
 # =====================================
 
-# =====================================
-# SIDEBAR
-# =====================================
-
 with st.sidebar:
 
     st.title("☕ Fluxo Inteligente")
@@ -331,7 +327,7 @@ with tab2:
         )
     
         st.plotly_chart(fig, use_container_width=True)
-
+        
 with tab3:
     # =====================================
     # INSIGHTS DO MODELO
@@ -455,5 +451,3 @@ st.caption(
     Especialização em Ciência de Dados — UTFPR • 2026
     """
 )
-
-
