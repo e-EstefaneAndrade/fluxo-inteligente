@@ -44,17 +44,20 @@ streamlit run app.py
 O notebook realiza todo o processo:
 1. Tratamento da base [Coffee Shop Sales](https://www.kaggle.com/datasets/keremkarayaz/coffee-shop-sales) e construção do modelo financeiro (receita, CMV, folha, taxas, custos fixos e saldo acumulado)
 2. Análise exploratória e engenharia de atributos (variáveis de calendário, defasagens e médias móveis de 7/30 dias)
-3. Treinamento e comparação de dois modelos Random Forest Regressor
-4. Geração das previsões de saldo de caixa para os próximos 30 dias
+3. Treinamento e comparação de modelos (Random Forest e modelos de tendência/drift), com validação cronológica
+4. Geração das previsões de saldo de caixa para os próximos 30 dias com o modelo final (drift)
 
-### Desempenho dos modelos
+### Desempenho dos modelos (validação cronológica)
 
 | Modelo | MAE (R$) | RMSE (R$) | R² |
 |---|---|---|---|
-| Modelo A (com saldo anterior) | 626,60 | 843,96 | 0,9991 |
-| Modelo B (sem saldo anterior) — **modelo final** | 756,18 | 999,91 | 0,9987 |
+| Persistência (flat) | 13.800,99 | 15.987,18 | -2,9248 |
+| Drift (média de fluxo, 7 dias) | 1.834,70 | 2.310,27 | 0,9180 |
+| **Drift (média de fluxo, 30 dias) — modelo final** | **1.183,28** | **1.556,87** | **0,9628** |
+| Modelo A (Random Forest) | 16.424,39 | 18.518,05 | -4,2657 |
+| Modelo B (Random Forest) | 16.795,03 | 18.831,55 | -4,4455 |
 
-O Modelo B foi escolhido para produção por eliminar a dependência recursiva do saldo do dia anterior, evitando acúmulo de erro ao longo do horizonte de previsão de 30 dias.
+Os dois modelos de Random Forest, apesar de amplamente usados em problemas de regressão, não conseguem extrapolar além do intervalo de valores vistos no treinamento — uma limitação estrutural para prever uma série cumulativa e crescente como o saldo de caixa. O modelo final adotado é um modelo de tendência (**drift**), que projeta a taxa de variação recente do fluxo de caixa para os dias seguintes, e superou com folga tanto o Random Forest quanto a persistência simples.
 
 ## Tecnologias
 
