@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
+import plotly.graph_objects as go
 
 # =====================================
 # FORMATAÇÃO BRASILEIRA
@@ -53,6 +55,7 @@ with st.sidebar:
 # =====================================
 # CARREGAMENTO DOS DADOS
 # =====================================
+
 @st.cache_data
 def carregar_dados():
     """Carrega e prepara todos os datasets utilizados pelo dashboard."""
@@ -88,7 +91,7 @@ try:
 except FileNotFoundError as e:
     st.error(
         f"""
-        Não foi possível carregar os dados do sistema.
+        ⚠️ Não foi possível carregar os dados do sistema.
 
         Verifique se a pasta `dados/` está presente no repositório e contém todos
         os arquivos CSV esperados.
@@ -97,6 +100,16 @@ except FileNotFoundError as e:
         """
     )
     st.stop()
+
+# Métricas do modelo: usadas para desenhar a faixa de incerteza
+rmse_modelo = None
+try:
+    df_metricas = pd.read_csv("dados/metricas_modelo.csv")
+    linha_modelo_final = df_metricas[df_metricas["Modelo"] == "Drift (média fluxo 30d)"]
+    if not linha_modelo_final.empty:
+        rmse_modelo = float(linha_modelo_final["RMSE"].iloc[0])
+except FileNotFoundError:
+    pass
 
 # =====================================
 # TÍTULO
@@ -271,7 +284,39 @@ with tab2:
                 "tipo": "Período"
             }
         )
-    
+
+        # Faixa de incerteza da previsão: a largura cresce com a raiz do
+        # número de dias à frente, quanto mais distante, maior a incerteza,
+        # escalada pelo RMSE do modelo obtido na avaliação (Modelo B).
+        if rmse_modelo is not None:
+            previsao = (
+                df_historico_previsao[
+                    df_historico_previsao["tipo"] == "Previsão"
+                ]
+                .sort_values("data")
+                .copy()
+            )
+
+            if not previsao.empty:
+                dias_a_frente = np.arange(1, len(previsao) + 1)
+                banda = rmse_modelo * np.sqrt(dias_a_frente)
+
+                limite_superior = previsao["saldo"] + banda
+                limite_inferior = previsao["saldo"] - banda
+
+                fig.add_trace(
+                    go.Scatter(
+                        x=pd.concat([previsao["data"], previsao["data"][::-1]]),
+                        y=pd.concat([limite_superior, limite_inferior[::-1]]),
+                        fill="toself",
+                        fillcolor="rgba(255, 0, 0, 0.10)",
+                        line=dict(color="rgba(255, 0, 0, 0)"),
+                        hoverinfo="skip",
+                        name="Faixa de incerteza",
+                        showlegend=True,
+                    )
+                )
+
         # Marca o início da previsão
         ultima_data_historico = (
             df_historico_previsao[
@@ -297,6 +342,12 @@ with tab2:
             fig,
             use_container_width=True
         )
+
+        if rmse_modelo is None:
+            st.caption(
+                "ℹ️ Faixa de incerteza indisponível — gere o arquivo "
+                "`dados/metricas_modelo.csv` executando o notebook atualizado."
+            )
     
     # ---------- IMPORTÂNCIA DAS VARIÁVEIS ----------
     
@@ -327,7 +378,7 @@ with tab2:
         )
     
         st.plotly_chart(fig, use_container_width=True)
-        
+
 with tab3:
     # =====================================
     # INSIGHTS DO MODELO
@@ -337,15 +388,21 @@ with tab3:
     
     st.markdown(
         """
+        O Fluxo Inteligente projeta o saldo de caixa futuro com base na tendência
+        recente do negócio — a variação média do fluxo de caixa nos últimos 30 dias.
+
+        Esse enfoque foi escolhido após testes comparativos: modelos de Machine
+        Learning (Random Forest) não conseguiram acompanhar o crescimento contínuo
+        do caixa ao longo do tempo, enquanto um modelo de tendência simples e
+        interpretável apresentou desempenho muito superior.
+
         Principais fatores que impactam o saldo de caixa:
-    
+
         - Receita média dos últimos 30 dias
-    
+
         - Fluxo médio dos últimos 30 dias
-    
-        - Receita média dos últimos 7 dias
-    
-        O modelo identificou que tendências de médio prazo possuem maior influência no saldo futuro da cafeteria.
+
+        O sistema identificou que tendências de médio prazo possuem maior influência no saldo futuro da cafeteria do que variações do dia a dia.
         """
     )
     
@@ -451,3 +508,5 @@ st.caption(
     Especialização em Ciência de Dados — UTFPR • 2026
     """
 )
+
+
